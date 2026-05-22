@@ -22,13 +22,13 @@ func main() {
 			fmt.Print("Error during input:", err)
 		}
 
-		switch {
+		switch command{
 			
-			case command == "":
+			case "":
 				continue
 
-			case command == "exit":
-				os.Exit(0)
+			case "exit":
+				break
 			
 			case strings.HasPrefix(command, "echo "):
 				fmt.Println(command[5:])

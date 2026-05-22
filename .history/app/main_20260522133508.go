@@ -28,7 +28,7 @@ func main() {
 				continue
 
 			case command == "exit":
-				os.Exit(0)
+				break
 			
 			case strings.HasPrefix(command, "echo "):
 				fmt.Println(command[5:])

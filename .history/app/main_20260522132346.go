@@ -22,19 +22,14 @@ func main() {
 			fmt.Print("Error during input:", err)
 		}
 
-		switch {
-			
-			case command == "":
-				continue
-
-			case command == "exit":
-				os.Exit(0)
-			
-			case strings.HasPrefix(command, "echo "):
-				fmt.Println(command[5:])
-			
-			default:
-				fmt.Println(command + ": command not found")
+		if command != "exit" {
+		fmt.Println(command + ": command not found")	
 		}
+		
+		if command == "exit" {
+			break
+		}
+
+		if strings.HasPrefix(command, "echo")
     	}	
 	}
