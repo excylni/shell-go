@@ -21,7 +21,7 @@ func main() {
 		}
 
 		if command != "" {
-		fmt.Println(command[:len(command)-1] + ": command not found")	
+		fmt.Println(command[:len(command)-1]+ ":command not found")	
 		}
 	
     	}	

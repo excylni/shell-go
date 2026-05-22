@@ -17,12 +17,13 @@ func main() {
 
 		command, err := reader.ReadString('\n')
 		if err != nil{
-			fmt.Print("Error during input:", err)
+			fmt.Print("Error during input")
 		}
-
-		if command != "" {
-		fmt.Println(command[:len(command)-1] + ": command not found")	
-		}
-	
-    	}	
 	}
+	command, err := reader.ReadString('\n')
+
+	if command != nil {
+		fmt.Println(command[:len(command)-1]+ ":command not found")
+	}
+	
+}

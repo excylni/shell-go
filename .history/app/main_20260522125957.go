@@ -19,10 +19,10 @@ func main() {
 		if err != nil{
 			fmt.Print("Error during input:", err)
 		}
-
-		if command != "" {
-		fmt.Println(command[:len(command)-1] + ": command not found")	
-		}
-	
-    	}	
 	}
+
+	if command != nil {
+		fmt.Println(command[:len(command)-1]+ ":command not found")
+	}
+	
+}
