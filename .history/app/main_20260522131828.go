@@ -15,19 +15,15 @@ func main() {
 
 	for {
 		fmt.Print("$ ")
-		command, err := reader.ReadString('\n')
 		command = strings.TrimSpace(command)
-
+		command, err := reader.ReadString('\n')
 		if err != nil{
 			fmt.Print("Error during input:", err)
 		}
 
-		if command != "exit" {
+		if command != "" {
 		fmt.Println(command + ": command not found")	
 		}
-		
-		if command == "exit" {
-			break
-		}
+	
     	}	
 	}

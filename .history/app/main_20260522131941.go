@@ -22,12 +22,12 @@ func main() {
 			fmt.Print("Error during input:", err)
 		}
 
-		if command != "exit" {
+		if command != "" {
 		fmt.Println(command + ": command not found")	
 		}
 		
-		if command == "exit" {
-			break
-		}
+		if command == "exit" [
+	
+		]
     	}	
 	}
