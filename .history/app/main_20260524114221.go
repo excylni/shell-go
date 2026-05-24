@@ -35,13 +35,6 @@ func main() {
 
 			case strings.HasPrefix(command, "type "):
 				target := command[5:]
-
-				if target == "exit" || target == "echo" || target == "type" {
-					fmt.Println(target + " is a shell builtin")
-				} else {
-					fmt.Println(target + ": not found")
-				}
-				
 			
 			default:
 				fmt.Println(command + ": command not found")
