@@ -5,7 +5,7 @@ import (
 	"bufio"
 	"os"
 	"strings"
-	"os/exec"
+	"exec"
 )
 
 // Ensures gofmt doesn't remove the "fmt" import in stage 1 (feel free to remove this!)
@@ -35,14 +35,12 @@ func main() {
 				fmt.Println(command[5:])
 
 			case strings.HasPrefix(command, "type "):
-				target := strings.TrimSpace(command[5:])
+				target := command[5:]
 
 				if target == "exit" || target == "echo" || target == "type" {
 					fmt.Println(target + " is a shell builtin")
+				} else {
 
-				} else if  path, err := exec.LookPath(target) ;err == nil {
-						fmt.Println(target + " is " + path)
-					
 				} else {
 					fmt.Println(target + ": not found")
 				}

@@ -40,9 +40,11 @@ func main() {
 				if target == "exit" || target == "echo" || target == "type" {
 					fmt.Println(target + " is a shell builtin")
 
-				} else if  path, err := exec.LookPath(target) ;err == nil {
-						fmt.Println(target + " is " + path)
-					
+				} else if  path, err := exec.LookPath(target)
+					;err == nil {
+						fmt.Println(target + "is" + path)
+					}
+
 				} else {
 					fmt.Println(target + ": not found")
 				}
