@@ -30,7 +30,16 @@ func main() {
 			
 			case command == "":
 				continue
+			
 
+			case command == "pwd":
+				// returns path of the current directory
+				dir, err := os.Getwd()
+				if err != nil {
+					fmt.Fprintln(os.Stderr, "Error retrieving current directory", err)
+				} else {
+					fmt.Println(dir)
+				}
 			case command == "exit":
 				os.Exit(0)
 			
@@ -41,7 +50,7 @@ func main() {
 				// checking the type 
 				target := strings.TrimSpace(command[5:])
 
-				if target == "exit" || target == "echo" || target == "type" {
+				if target == "exit" || target == "echo" || target == "type" || target == "pwd" {
 					fmt.Println(target + " is a shell builtin")
 
 				} else if path, err := exec.LookPath(target) ;err == nil {
