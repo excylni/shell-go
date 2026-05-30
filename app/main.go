@@ -17,11 +17,14 @@ func main() {
 	for {
 		fmt.Print("$ ")
 		command, err := reader.ReadString('\n')
-		command = strings.TrimSpace(command)
 
 		if err != nil{
 			fmt.Print("Error during input:", err)
+			break
 		}
+
+		command = strings.TrimSpace(command)
+		args := strings.Fields(command)
 
 		switch {
 			
@@ -35,21 +38,39 @@ func main() {
 				fmt.Println(command[5:])
 
 			case strings.HasPrefix(command, "type "):
+				// checking the type 
 				target := strings.TrimSpace(command[5:])
 
 				if target == "exit" || target == "echo" || target == "type" {
 					fmt.Println(target + " is a shell builtin")
 
-				} else if  path, err := exec.LookPath(target) ;err == nil {
-						fmt.Println(target + " is " + path)
-					
+				} else if path, err := exec.LookPath(target) ;err == nil {
+					fmt.Println(target + " is " + path)
+
 				} else {
 					fmt.Println(target + ": not found")
 				}
 				
 			
 			default:
-				fmt.Println(command + ": command not found")
-		}
+				// If not builtin or type, check if executable and run it
+				if path, err := exec.LookPath(args[0]); err == nil {
+					cmd := exec.Command(path, args[1:]...)
+					
+					cmd.Args = args
+					cmd.Stdin = os.Stdin
+					cmd.Stdout = os.Stdout
+					cmd.Stderr = os.Stderr
+
+					err := cmd.Run()
+					if err != nil {
+						fmt.Print("Error running command", err)
+					} 
+					
+				} else {
+						fmt.Println(command + ": command not found")
+										
+			}
     	}	
-	}
+		}
+	}	
