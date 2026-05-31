@@ -40,6 +40,16 @@ func main() {
 				} else {
 					fmt.Println(dir)
 				}
+			
+			case args[0] == "cd":
+				// change directory 
+				targetDir := args[1] 
+				err := os.Chdir(targetDir)
+
+				if err != nil {
+					fmt.Fprintln(os.Stderr, "cd: " + targetDir + ": No such file or directory" )
+				}
+
 			case command == "exit":
 				os.Exit(0)
 			
