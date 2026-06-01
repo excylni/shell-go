@@ -43,11 +43,23 @@ func main() {
 			
 			case args[0] == "cd":
 				// change directory 
-				targetDir := args[1] 
-				err := os.Chdir(targetDir)
+				targetDir := args[1]
+				if targetDir == "~" || strings.HasPrefix(targetDir, "~/") {
+					home, err := os.UserHomeDir()
 
-				if err != nil {
-					fmt.Fprintln(os.Stderr, "cd: " + targetDir + ": No such file or directory" )
+					if err!= nil {
+						fmt.Fprintln(os.Stderr, "cd: cannot find home directory:", err)
+						continue
+					} else {
+						os.Chdir(home)
+					}
+
+				} else {
+					err := os.Chdir(targetDir)
+
+					if err != nil {
+						fmt.Fprintln(os.Stderr, "cd: " + targetDir + ": No such file or directory" )
+					}
 				}
 
 			case command == "exit":
