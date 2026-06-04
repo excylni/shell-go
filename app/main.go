@@ -24,7 +24,7 @@ func main() {
 		}
 
 		command = strings.TrimSpace(command)
-		args := strings.Fields(command)
+		args := parseInput(command)
 
 		switch {
 			
@@ -65,8 +65,8 @@ func main() {
 			case command == "exit":
 				os.Exit(0)
 			
-			case strings.HasPrefix(command, "echo "):
-				fmt.Println(command[5:])
+			case args[0] == "echo":
+				fmt.Println(strings.Join(args[1:]," "))
 
 			case strings.HasPrefix(command, "type "):
 				// checking the type 
@@ -104,4 +104,37 @@ func main() {
 			}
     	}	
 		}
-	}	
+	}
+
+	func parseInput(input string) []string{
+		var args []string 
+		var currentArg strings.Builder
+		insideQuotes := false
+
+		for _, char := range input {
+			switch char {
+			case '\'':
+				// Toggling state of being inside/outside of quote
+				insideQuotes =  !insideQuotes
+			
+			case ' ':
+				if insideQuotes { // spaces are treated as normal characters
+					currentArg.WriteRune(char)
+				} else { 
+					if currentArg.Len() > 0 {
+						args = append(args, currentArg.String())
+						currentArg.Reset() // clean buffer for next argument
+					}
+				}
+			
+			default:
+				currentArg.WriteRune(char)
+			}
+		}
+		// adding the rest if command didnt end on spacebar
+		if currentArg.Len() > 0 {
+			args = append(args, currentArg.String())
+		}
+
+		return args
+	}
