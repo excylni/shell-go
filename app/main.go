@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 	"os/exec"
+	"unicode"
 )
 
 // Ensures gofmt doesn't remove the "fmt" import in stage 1 (feel free to remove this!)
@@ -109,32 +110,92 @@ func main() {
 	func parseInput(input string) []string{
 		var args []string 
 		var currentArg strings.Builder
-		insideQuotes := false
+		var quoteChar rune =  0
 
-		for _, char := range input {
+		for i := 0; i < len(input); i++ {
+			char := rune(input[i])
+
 			switch char {
-			case '\'':
-				// Toggling state of being inside/outside of quote
-				insideQuotes =  !insideQuotes
-			
-			case ' ':
-				if insideQuotes { // spaces are treated as normal characters
+			case '\'', '"':
+				// Toggling state of being inside/outside of quotes
+				if quoteChar == 0 {
+					quoteChar = char
+				} else if quoteChar == char {
+					quoteChar = 0
+				// If already already inside a quote, write normally 
+				} else {
 					currentArg.WriteRune(char)
-				} else { 
-					if currentArg.Len() > 0 {
-						args = append(args, currentArg.String())
-						currentArg.Reset() // clean buffer for next argument
+				}
+												
+			case '\\': // for \ Backlash character
+				if quoteChar == '"' { // If in double quotes, escapes next character
+					if i+1 < len(input) {
+						nextChar := rune(input[i+1])
+						if nextChar == '$' || nextChar == '"' || nextChar == '\\' {
+							currentArg.WriteRune(nextChar)
+							i++ // skip next character
+						} else { // if its normal character like \a
+							currentArg.WriteRune(char)
+						}
+					} else {
+						fmt.Println("syntax error: unterminated double quote")
+					}
+				} else if quoteChar == '\'' {
+					currentArg.WriteRune(char)
+
+				} else { // outside of quotes it escapes next character
+					if i+1 < len(input) {
+						currentArg.WriteRune(rune(input[i+1]))
+						i++ // skip next character 
 					}
 				}
 			
+			case '$': 
+				if quoteChar == 0 || quoteChar == '"' {
+					// looking ahead to see when the variable ends
+					start := i + 1 
+					end := start
+					 
+					for end < len(input) {
+						// convert character to rune for unicode check
+						r := rune(input[end])
+						if unicode.IsLetter(r) || unicode.IsDigit(r) || r == '_' {
+							end++
+						} else {
+							break
+						}
+					}
+					if end > start {
+						varName := input[start:end]
+						value := os.Getenv(varName)
+						currentArg.WriteString(value)
+						i = end - 1
+					} else { // treat it normally if its alone
+						currentArg.WriteRune(char)
+
+					}
+				} else { // single quote logic
+					currentArg.WriteRune(char)
+				}
+
+			case ' ':
+				if quoteChar != 0 { // space is prote~cted
+					currentArg.WriteRune(char)
+				} else {
+					if currentArg.Len() > 0 {
+						args = append(args, currentArg.String())
+						currentArg.Reset()
+						}
+					}
 			default:
 				currentArg.WriteRune(char)
+
 			}
 		}
-		// adding the rest if command didnt end on spacebar
+		
 		if currentArg.Len() > 0 {
 			args = append(args, currentArg.String())
-		}
-
+			}
 		return args
 	}
+		
