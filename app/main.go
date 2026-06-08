@@ -192,10 +192,10 @@ func main() {
 
 			}
 		}
-		
+
 		if currentArg.Len() > 0 {
 			args = append(args, currentArg.String())
 			}
 		return args
 	}
-		
+	
